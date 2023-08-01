@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
 import styles from '../styles/Home.module.css'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
@@ -7,9 +8,21 @@ import { Country, State, City } from 'country-state-city';
 import FormView from "../components/FormView"
 
 export default function Home() {
+  const [name, setName] = useState('')
   const [countryCode, setCountryCode] = useState('');
   const [stateCode, setStateCode] = useState('');
   const [city, setCity] = useState('');
+  const [description, setDescription] = useState('')
+  const [address, setAddress] = useState('')
+  const [zip, setZip] = useState('')
+  const [formInfo, setFormInfo] = useState([[]])
+
+  function onFormSubmit(e) {
+    e.preventDefault()
+    setFormInfo((previous => [...previous, {
+      id: uuidv4(), name, countryCode, stateCode, city, description, address, zip
+    }]))
+  }
 
   return (
     <div className={styles.container}>
@@ -26,7 +39,8 @@ export default function Home() {
         </h1>
         <div className="mt-20 bg-blue-100/30 rounded-lg p-8 mb-10 grid grid-cols-2 gap-x-0 gap-y-8 sm:grid-cols-2">
           <div className="col-span-2">
-            <form className="w-8/12 ml-9">
+
+            <form className="w-8/12 ml-9" onSubmit={onFormSubmit}>
               <div className="space-y-12">
                 <div className="border-b border-gray-900/10 pb-12">
                   <h2 className="text-base font-semibold leading-7 text-gray-900">Personal Information</h2>
@@ -36,9 +50,11 @@ export default function Home() {
                     <div className="sm:col-span-full">
                       <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
                         Name
-                  </label>
+                      </label>
                       <div className="mt-2">
                         <input
+                          required
+                          onChange={(e) => setName(e.target.value)}
                           type="text"
                           name="first-name"
                           id="first-name"
@@ -49,16 +65,18 @@ export default function Home() {
                     </div>
 
                     <div className="sm:col-span-full">
-                      <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+                      <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
                         Description
-              </label>
+                      </label>
                       <div className="mt-2">
                         <input
+                          onChange={(e) => setDescription(e.target.value)}
+                          required
                           type="text"
                           height="1000px"
-                          name="last-name"
-                          id="last-name"
-                          autoComplete="family-name"
+                          name="description"
+                          id="description"
+                          autoComplete="description"
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
                       </div>
@@ -67,9 +85,11 @@ export default function Home() {
                     <div className="col-span-full">
                       <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
                         Street address
-              </label>
+                      </label>
                       <div className="mt-2">
                         <input
+                          onChange={(e) => setAddress(e.target.value)}
+                          required
                           type="text"
                           name="street-address"
                           id="street-address"
@@ -96,7 +116,7 @@ export default function Home() {
                           <option value=''>Country</option>
                           {
                             Country.getAllCountries().map(country => {
-                              return <option key={country.phonecode} value={country.isoCode}>{country.name}</option>
+                              return <option key={country.isoCode} value={country.isoCode}>{country.name}</option>
                             })
                           }
                         </select>
@@ -111,7 +131,7 @@ export default function Home() {
                           <option value=''>State</option>
                           {
                             State.getStatesOfCountry(countryCode).map(state => {
-                              return <option key={state.latitude} value={state.isoCode}>{state.name}</option>
+                              return <option key={state.isoCode} value={state.isoCode}>{state.name}</option>
                             })
                           }
                         </select>
@@ -137,14 +157,16 @@ export default function Home() {
 
 
                     <div className="sm:col-span-6 sm:col-start-1">
-                      <label htmlFor="city" className="block text-sm font-medium leading-6 text-gray-900">
+                      <label htmlFor="zip" className="block text-sm font-medium leading-6 text-gray-900">
                         Zip/postal code
-              </label>
+                      </label>
                       <div className="mt-2">
                         <input
-                          type="text"
-                          name="city"
-                          id="city"
+                          onChange={(e) => setZip(e.target.value)}
+                          required
+                          type="zip"
+                          name="zip"
+                          id="zip"
                           autoComplete="address-level2"
                           className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         />
@@ -170,7 +192,7 @@ export default function Home() {
             </form>
           </div>
           <div className="col-span-2">
-            <FormView />
+            <FormView formData={formInfo} setFormInfo={setFormInfo} />
           </div>
         </div>
       </main>

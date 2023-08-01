@@ -1,23 +1,7 @@
 import { TrashIcon, PencilIcon } from '@heroicons/react/24/solid'
 
-const userDatas = [
 
-
-    {
-
-        id: 'AAPS0L',
-        name: 'Chase & Co.',
-        description: 'CAC',
-        address: '+$4.37',
-        country: '$3,509.00',
-        state: '12.00',
-        city: '$4,397.00',
-        zip: '90012',
-    },
-    // More userDatas...
-]
-
-export default function FormView() {
+export default function FormView({ formData, setFormInfo }) {
     return (
         <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
@@ -96,27 +80,36 @@ export default function FormView() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 bg-white">
-                                {userDatas.map((userData) => (
+                                {formData.map((userData) => (
                                     <tr key={userData.id}>
                                         <td className="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0">{userData.id}</td>
                                         <td className="whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-900">
                                             {userData.name}
                                         </td>
-                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-900">{userData.description}</td>
-                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{userData.address}</td>
-                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{userData.country}</td>
-                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{userData.state}</td>
-                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{userData.city}</td>
-                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">{userData.zip}</td>
+                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-900">
+                                            {userData.description}</td>
+                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
+                                            {userData.address}</td>
+                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
+                                            {userData.countryCode}</td>
+                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
+                                            {userData.stateCode}</td>
+                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
+                                            {userData.city}</td>
+                                        <td className="whitespace-nowrap px-2 py-2 text-sm text-gray-500">
+                                            {userData.zip}</td>
                                         <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                                            <button href="#" className="text-indigo-600 hover:text-indigo-900">
                                                 <PencilIcon className="h-4 w-4 text--400" /> <span className="sr-only">, {userData.id}</span>
-                                            </a>
+                                            </button>
                                         </td>
                                         <td className="relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                                            <button onClick={() => {
+                                                const data = formData.filter((item) => item.id != userData.id)
+                                                setFormInfo(data)
+                                            }} className="text-indigo-600 hover:text-indigo-900">
                                                 <TrashIcon className="h-4 w-4 text-red-400" /> <span className="sr-only">, {userData.id}</span>
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
